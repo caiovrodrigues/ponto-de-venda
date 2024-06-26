@@ -3,6 +3,7 @@ package com.caio.pdv.web;
 import com.caio.pdv.entities.User;
 import com.caio.pdv.services.UserService;
 import com.caio.pdv.web.dto.LoginRequestDTO;
+import com.caio.pdv.web.dto.TokenResponseDTO;
 import com.caio.pdv.web.dto.UserCadastroRequest;
 import com.caio.pdv.web.dto.UserResponseDTO;
 import jakarta.validation.Valid;
@@ -42,9 +43,9 @@ public class UserController {
     }
 
     @PostMapping("/auth")
-    public ResponseEntity<User> logar(@Valid @RequestBody LoginRequestDTO login){
-        User userSaved = userService.logar(login);
-        return ResponseEntity.ok(userSaved);
+    public ResponseEntity<TokenResponseDTO> logar(@Valid @RequestBody LoginRequestDTO login){
+        String token = userService.logar(login);
+        return ResponseEntity.ok(new TokenResponseDTO(token, 300));
     }
 
     @PutMapping("/{id}")

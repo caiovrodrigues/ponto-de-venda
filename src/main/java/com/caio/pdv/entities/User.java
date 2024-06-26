@@ -4,10 +4,9 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-
+import java.util.Set;
 
 
 @Builder
@@ -31,6 +30,9 @@ public class User {
 
     @Column(name = "password", nullable = false)
     private String password;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    private Set<UserRoles> roles;
 
     private Boolean isEnabled;
 
