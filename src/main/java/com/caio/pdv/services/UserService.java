@@ -63,7 +63,7 @@ public class UserService {
 //            throw new UserAlreadyExist(String.format("Email %s já cadastrado.", userDTO.getEmail()));
 //        }
 
-        userDTO.setPassword(SecurityConfig.passwordEncoder().encode(userDTO.getPassword()));
+        userDTO.setPassword(passwordEncoder.encode(userDTO.getPassword()));
 
         return userRepository.save(ModelMapperSingleton.getInstance().map(userDTO, User.class));
     }

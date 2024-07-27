@@ -15,6 +15,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -30,9 +31,9 @@ public class SaleController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Sale>> getAllSales(){
-        User user = ModelMapperSingleton.getUserFromContext();
-        System.out.println("ROTA PRIVADA ACESSADA POR " + user.getName());
+    public ResponseEntity<List<Sale>> getAllSales(JwtAuthenticationToken token){
+//        User user = ModelMapperSingleton.getUserFromContext();
+        System.out.println("ROTA PRIVADA ACESSADA POR " + token.getName());
         List<Sale> sales = saleService.findAll();
         return ResponseEntity.ok(sales);
     }

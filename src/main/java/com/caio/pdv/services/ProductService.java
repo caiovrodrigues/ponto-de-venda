@@ -2,10 +2,12 @@ package com.caio.pdv.services;
 
 import com.caio.pdv.entities.Product;
 import com.caio.pdv.entities.repositories.ProductRepository;
+import com.caio.pdv.web.dto.ProductCreateDTO;
 import com.caio.pdv.web.dto.UserResponseDTO;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -29,5 +31,9 @@ public class ProductService {
 
     public void save(Product product) {
         productRepository.save(product);
+    }
+
+    public Product create(ProductCreateDTO product) {
+        return productRepository.save(product.toProduct());
     }
 }

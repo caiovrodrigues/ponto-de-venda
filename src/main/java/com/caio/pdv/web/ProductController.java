@@ -3,6 +3,7 @@ package com.caio.pdv.web;
 import com.caio.pdv.entities.Product;
 import com.caio.pdv.infra.security.CustomUserDetails;
 import com.caio.pdv.services.ProductService;
+import com.caio.pdv.web.dto.ProductCreateDTO;
 import org.springframework.boot.autoconfigure.data.web.SpringDataWebProperties;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -12,10 +13,10 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.util.UriComponentsBuilder;
+
+import java.net.URI;
 
 @RestController
 @RequestMapping("/api/products")
@@ -44,6 +45,14 @@ public class ProductController {
         PageRequest pageRequest = PageRequest.of(page - 1, size);
         Page<Product> products = productService.findAll(pageRequest);
         return ResponseEntity.ok(products);
+    }
+
+    @PreAuthorize(value = "hasAuthority('SCOPE_ADMIN')")
+    @PostMapping
+    public ResponseEntity<Product> create(@RequestBody ProductCreateDTO product){
+        Product productSaved = productService.create(product);
+        URI uri = UriComponentsBuilder.fromPath("/api/products/{id}").buildAndExpand(productSaved.getId()).toUri();
+        return ResponseEntity.created(uri).body(productSaved);
     }
 
 }

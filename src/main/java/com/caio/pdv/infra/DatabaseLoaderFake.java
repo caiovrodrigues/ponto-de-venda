@@ -5,34 +5,40 @@ import com.caio.pdv.entities.repositories.*;
 import com.caio.pdv.infra.security.SecurityConfig;
 import jakarta.annotation.PostConstruct;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
 import java.util.List;
 
-@Configuration
+@Component
+@Profile(value = {"local"})
 public class DatabaseLoaderFake {
 
-    private final UserRepository userRepository;
+    protected final UserRepository userRepository;
     private final SaleRepository saleRepository;
     private final ItemSaleRepository itemSaleRepository;
     private final ProductRepository productRepository;
-    private final RoleRepository roleRepository;
-    private final RolesRepository rolesRepository;
+    protected final RoleRepository roleRepository;
+    protected final RolesRepository rolesRepository;
+    protected final PasswordEncoder passwordEncoder;
 
-    public DatabaseLoaderFake(UserRepository userRepository, SaleRepository saleRepository, ItemSaleRepository itemSaleRepository, ProductRepository productRepository, RoleRepository roleRepository, RolesRepository rolesRepository){
+    public DatabaseLoaderFake(UserRepository userRepository, SaleRepository saleRepository, ItemSaleRepository itemSaleRepository, ProductRepository productRepository, RoleRepository roleRepository, RolesRepository rolesRepository, PasswordEncoder passwordEncoder){
         this.userRepository = userRepository;
         this.saleRepository = saleRepository;
         this.itemSaleRepository = itemSaleRepository;
         this.productRepository = productRepository;
         this.roleRepository = roleRepository;
         this.rolesRepository = rolesRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @PostConstruct
     public void loadData(){
 
-        User user1 = User.builder().name("Caio").email("caio@gmail.com").password(SecurityConfig.passwordEncoder().encode("1234")).isEnabled(true).build();
-        User user2 = User.builder().name("Ana").email("ana@gmail.com").password(SecurityConfig.passwordEncoder().encode("1234")).isEnabled(false).build();
+        User user1 = User.builder().name("Caio").email("caio@gmail.com").password(passwordEncoder.encode("1234")).isEnabled(true).build();
+        User user2 = User.builder().name("Ana").email("ana@gmail.com").password(passwordEncoder.encode("1234")).isEnabled(false).build();
 
         userRepository.save(user1);
         userRepository.save(user2);
